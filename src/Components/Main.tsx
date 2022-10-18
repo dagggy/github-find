@@ -18,7 +18,7 @@ export default function Main() {
     useEffect(() => {
         
 
-        getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase")).then((res) => {
+        getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase"), getString("language")).then((res) => {
             if (res !== repos){
                 setRepos(res);
             }

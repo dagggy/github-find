@@ -6,7 +6,7 @@ function getReposByUser(user: String, perPage: String, page: String) {
     .catch(error => {console.error(error);});
 }
 
-export default function getAndSortRepos(user: String, perPage: String, page: String, phrase: string) {
+export default function getAndSortRepos(user: String, perPage: String, page: String, phrase: String) {
     console.log("https://api.github.com/users/" + user + "/repos?per_page=" + perPage + "&page=" + page);
     return getReposByUser(user, perPage, page);
 }

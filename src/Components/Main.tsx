@@ -1,10 +1,12 @@
 import getAndSortRepos from "./Api/Api";
 import Form from "./Form/Form";
 import React, { useState, useEffect } from "react";
+import { ReactElement } from "react";
 
 export default function Main() {
 
     const [repos, setRepos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     function getString(name:string): String {
         const params = new URLSearchParams(window.location.search);
@@ -16,17 +18,62 @@ export default function Main() {
     }
 
     useEffect(() => {
-        
-
-        getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase"), getString("language")).then((res) => {
-            if (res !== repos){
-                setRepos(res);
-            }
-        });
+        setLoading(true);
+        // todo: make this only happen if there are arguments in the url
+        if (getString("user").length !== 0 && getString("phrase").length !== 0){
+            getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase"), getString("language")).then((res) => {
+                if (res !== repos){
+                    setRepos(res);
+                    setLoading(false);
+                }
+            });
+        }
     }, [])
     
+    function Fload() {
+        return <>loading</>;
+    }
+
+    function Table(): JSX.Element[] {
+        type ObjectKey = keyof typeof repos;
+        let items = "items" as ObjectKey;
+        let jsx: string[] = [];
+        let returns = [];
+        if(repos != null || undefined){
+        // @ts-ignore
+            for (let i = 0; i < repos[items].length; i++) {
+                // @ts-ignore
+                jsx.push([repos[items][i]["name"], repos[items][i]["html_url"], repos[items][i]["repository"]["description"], repos[items][i]["repository"]["owner"]["login"], repos[items][i]["repository"]["owner"]["avatar_url"],]);
+            }
+            console.log(jsx);
+            for(let i=0; i<jsx.length; i++) {
+                returns.push(
+                    <tbody>
+                        <td>{jsx[i][0]}</td>
+                        <td>{jsx[i][2]}</td>
+                        <td>{jsx[i][3]}</td>
+                    </tbody>
+                );
+            }
+            return returns;
+        }
+        return [<></>];
+    }
 
     console.log(repos);
 
-    return <><Form/></>;
+    return <>
+        <Form/> 
+        {loading ? <Fload/> :
+        <table>
+            <tbody>
+                <th>File</th>
+                <th>Description</th>
+                <th>User</th>
+            </tbody>
+            {Table()}
+        </table>
+        }
+    </>
+    
 }

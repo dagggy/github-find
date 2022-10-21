@@ -2,11 +2,14 @@ import getAndSortRepos from "./Api/Api";
 import Form from "./Form/Form";
 import React, { useState, useEffect } from "react";
 import { ReactElement } from "react";
+import useModal from "./Hooks/useModal";
+import Modal from "./Elements/Modal";
 
 export default function Main() {
 
     const [repos, setRepos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const {isOpen, toggle} = useModal();
 
     function getString(name:string): String {
         const params = new URLSearchParams(window.location.search);
@@ -49,9 +52,10 @@ export default function Main() {
             for(let i=0; i<jsx.length; i++) {
                 returns.push(
                     <tbody>
-                        <td>{jsx[i][0]}</td>
+                        <td><a href={jsx[i][1]} rel="noreferrer" target="_blank">{jsx[i][0]}</a></td>
                         <td>{jsx[i][2]}</td>
                         <td>{jsx[i][3]}</td>
+                        <td><button onClick={toggle}>View</button><Modal isOpen={isOpen} toggle={toggle}><img src={jsx[i][4]} alt={jsx[i][3]}></img></Modal></td>
                     </tbody>
                 );
             }
@@ -70,6 +74,7 @@ export default function Main() {
                 <th>File</th>
                 <th>Description</th>
                 <th>User</th>
+                <th>Profile Picture</th>
             </tbody>
             {Table()}
         </table>

@@ -8,6 +8,7 @@ import Modal from "./Elements/Modal";
 export default function Main() {
 
     const [repos, setRepos] = useState([]);
+    const [load, setLoad] = useState(false)
     const [loading, setLoading] = useState(true);
     const {isOpen, toggle} = useModal();
 
@@ -22,11 +23,15 @@ export default function Main() {
 
     useEffect(() => {
         setLoading(true);
+        setLoad(false);
         if (getString("user").length !== 0 && getString("phrase").length !== 0){
             getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase"), getString("language")).then((res) => {
                 if (res !== repos){
                     setRepos(res);
                     setLoading(false);
+                    if(repos !== undefined){
+                        setLoad(true);
+                    }
                 }
             });
         }
@@ -41,7 +46,7 @@ export default function Main() {
         let items = "items" as ObjectKey;
         let jsx: string[] = [];
         let returns = [];
-        if(repos != null || undefined){
+        if(load){
         // @ts-ignore
             for (let i = 0; i < repos[items].length; i++) {
                 // @ts-ignore

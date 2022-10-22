@@ -19,7 +19,7 @@ export default function Form() {
                 <option value="go">GO</option>
             </select><br/>
             <input type="range" id="per_page" min="5" max="100" step="5" name="per_page" defaultValue={getString(params, "per_page")}></input>
-            <input type="hidden" id="page" name="page" defaultValue={getString(params, "page")}></input>
+            <input type="hidden" id="page" name="page" defaultValue="1"></input>
             <input type="submit" value="Submit"></input>
         </form>
     </>

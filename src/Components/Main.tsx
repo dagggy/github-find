@@ -22,7 +22,6 @@ export default function Main() {
 
     useEffect(() => {
         setLoading(true);
-        // todo: make this only happen if there are arguments in the url
         if (getString("user").length !== 0 && getString("phrase").length !== 0){
             getAndSortRepos(getString("user"), getString("per_page"), getString("page"), getString("phrase"), getString("language")).then((res) => {
                 if (res !== repos){
@@ -34,7 +33,7 @@ export default function Main() {
     }, [])
     
     function Fload() {
-        return <>loading</>;
+        return <>Empty</>;
     }
 
     function Table(): JSX.Element[] {
@@ -48,10 +47,9 @@ export default function Main() {
                 // @ts-ignore
                 jsx.push([repos[items][i]["name"], repos[items][i]["html_url"], repos[items][i]["repository"]["description"], repos[items][i]["repository"]["owner"]["login"], repos[items][i]["repository"]["owner"]["avatar_url"],]);
             }
-            console.log(jsx);
             for(let i=0; i<jsx.length; i++) {
                 returns.push(
-                    <tbody>
+                    <tbody key={jsx[i][0] + i}>
                         <td><a href={jsx[i][1]} rel="noreferrer" target="_blank">{jsx[i][0]}</a></td>
                         <td>{jsx[i][2]}</td>
                         <td>{jsx[i][3]}</td>
@@ -64,7 +62,19 @@ export default function Main() {
         return [<></>];
     }
 
-    console.log(repos);
+    function PageSwitchButtons(): JSX.Element {
+        let page: number = Number(getString("page"));
+        console.log(page)
+        let url = String(window.location.href);
+        let newUrl = url.substring(0, url.lastIndexOf("&page=")) + "&page=";
+        if(page > 1) {
+            return(
+                // eslint-disable-next-line jsx-a11y/anchor-has-content
+                <div><a href={newUrl + (page-1)}>←</a> {page} <a href={newUrl + (page+1)}>→</a></div>
+            )
+        }
+        return <div>← {page} <a href={newUrl + (page+1)}>→</a></div>;
+    }
 
     return <>
         <Form/> 
@@ -77,6 +87,7 @@ export default function Main() {
                 <th>Profile Picture</th>
             </tbody>
             {Table()}
+            {PageSwitchButtons()}
         </table>
         }
     </>

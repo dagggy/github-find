@@ -69,7 +69,6 @@ export default function Main() {
 
     function PageSwitchButtons(): JSX.Element {
         let page: number = Number(getString("page"));
-        console.log(page)
         let url = String(window.location.href);
         let newUrl = url.substring(0, url.lastIndexOf("&page=")) + "&page=";
         if(page > 1) {

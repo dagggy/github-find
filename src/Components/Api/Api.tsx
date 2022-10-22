@@ -10,6 +10,11 @@
 
 export default function getAndSortRepos(user: String, perPage: String, page: String, phrase: String, language: String) {
     return fetch("https://api.github.com/search/code?q=" + phrase + "+user:" + user + "+language:" + language + "&per_page=" + perPage + "&page=" + page)
-    .then(response => {return response.json()})
-    .catch(error => {console.error(error); window.alert(error)});
+    .then(response => {
+        if (response.ok){
+            return response.json();
+        }
+        return Promise.reject(response);
+    })
+    .catch(error => {console.error(error.status, error.statusText); return []});
 }

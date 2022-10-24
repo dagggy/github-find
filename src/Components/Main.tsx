@@ -55,10 +55,12 @@ export default function Main() {
             for(let i=0; i<jsx.length; i++) {
                 returns.push(
                     <tbody key={jsx[i][0] + i}>
-                        <td><a href={jsx[i][1]} rel="noreferrer" target="_blank">{jsx[i][0]}</a></td>
-                        <td>{jsx[i][2]}</td>
-                        <td>{jsx[i][3]}</td>
-                        <td><button onClick={toggle}>View</button><Modal isOpen={isOpen} toggle={toggle}><img src={jsx[i][4]} alt={jsx[i][3]}></img></Modal></td>
+                        <tr>
+                            <td><a href={jsx[i][1]} rel="noreferrer" target="_blank">{jsx[i][0]}</a></td>
+                            <td>{jsx[i][2]}</td>
+                            <td>{jsx[i][3]}</td>
+                            <td className="pic-container"><button className="pic-button" onClick={toggle}>View</button><Modal isOpen={isOpen} toggle={toggle}><img src={jsx[i][4]} alt={jsx[i][3]}></img></Modal></td>
+                        </tr>
                     </tbody>
                 );
             }
@@ -74,26 +76,29 @@ export default function Main() {
         if(page > 1) {
             return(
                 // eslint-disable-next-line jsx-a11y/anchor-has-content
-                <div><a href={newUrl + (page-1)}>←</a> {page} <a href={newUrl + (page+1)}>→</a></div>
+                <div className="page-switch"><a href={newUrl + (page-1)}>←</a> {page} <a href={newUrl + (page+1)}>→</a></div>
             )
         }
-        return <div>← {page} <a href={newUrl + (page+1)}>→</a></div>;
+        return <div className="page-switch">← {page} <a href={newUrl + (page+1)}>→</a></div>;
     }
 
     return <>
         <Form/> 
         {loading ? <Fload/> :
+        <>
         <table>
-            <tbody>
-                <th>File</th>
-                <th>Description</th>
-                <th>User</th>
-                <th>Profile Picture</th>
-            </tbody>
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Description</th>
+                    <th>User</th>
+                    <th>Profile Picture</th>
+                </tr>
+            </thead>
             {Table()}
-            {PageSwitchButtons()}
         </table>
+        {PageSwitchButtons()}
+        </>
         }
     </>
-    
 }
